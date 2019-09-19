@@ -337,6 +337,57 @@ const style = theme => ({
         position: "absolute",
         right: 50,
         left: 300
+    },
+    '@global':{
+        '.MuiTableCell-root' : {
+            backgroundColor: theme.modalBackground,
+            color: theme.text,
+            borderBottomColor: theme.text,
+            fontFamily: "'Roboto Condensed', sans-serif!important",
+           fontWeight: "300"
+        },
+        ".MuiToolbar-root" : {
+            backgroundColor: theme.modalBackground,
+            color: theme.text,
+            fontFamily: "'Roboto Condensed', sans-serif!important",
+            fontWeight: "300"
+        },
+        ".MuiIconButton-root" : {
+            color: theme.text,
+            fontFamily: "'Roboto Condensed', sans-serif!important",
+            fontWeight: "300"
+        },
+        ".MuiInputBase-root" : {
+            color: theme.text,
+            fontFamily: "'Roboto Condensed', sans-serif!important",
+            fontWeight: "300"
+        },
+        ".MuiFormLabel-root" : {
+            color: theme.text,
+            fontFamily: "'Roboto Condensed', sans-serif!important",
+            fontWeight: "300"
+        },
+        ".MuiInput-underline:before" : {
+            borderColor: [theme.text, "!important"]
+        },
+        ".MuiTablePagination-root" : {
+            color: theme.text
+        },
+        ".MuiToolbar-root.Mui-disabled" : {
+            color: "red"
+        },
+        ".MuiSvgIcon-root" : {
+            fill: theme.text
+        },
+        ".MuiIconButton-root.Mui-disabled" : {
+            "& .MuiSvgIcon-root": {
+                fill: theme.svgDisabled
+            }
+        },
+        ".MuiTypography-root":{
+            fontFamily: "'Roboto Condensed', sans-serif!important",
+            fontWeight: "300"
+        }
     }
 })
 

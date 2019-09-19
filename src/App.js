@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import withStyles from "@material-ui/core/es/styles/withStyles";
-import RoleManagmentPanel from "./components/roleManagmentPanel";
+import NewsPanel from "./components/newsPanel";
 
 class App extends Component {
 
@@ -9,7 +9,7 @@ class App extends Component {
     const {classes} = this.props;
     return (
       <div className={classes.App}>
-        <RoleManagmentPanel />
+        <NewsPanel />
       </div>
     )
   }

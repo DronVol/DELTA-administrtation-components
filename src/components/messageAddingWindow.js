@@ -20,7 +20,6 @@ class MessageAddingWindow extends Component {
 
     submitMessage = () => {
         console.log("Submit message");
-        console.log(this.state);
         if (this.state.text === "" || this.state.title === "") {
             console.log("error");
             this.setState({error: "textfields"});
@@ -159,7 +158,8 @@ const style = theme => ({
         margin: "auto",
         width: 700,
         height: 500,
-        boxShadow: ['0px 1px 3px 0px rgba(0,0,0,0.2)', '0px 1px 1px 0px rgba(0,0,0,0.14)', '0px 2px 1px -1px rgba(0,0,0,0.12)'],
+        //boxShadow: ['0px 1px 3px 0px rgba(0,0,0,0.2)', '0px 1px 1px 0px rgba(0,0,0,0.14)', '0px 2px 1px -1px rgba(0,0,0,0.12)'],
+        boxShadow: ['-4px 6px 6px 0px rgba(0,0,0,0.2)', '4px 6px 6px 0px rgba(0,0,0,0.2)', '0px 4px 6px 0px rgba(0,0,0,0.2)'],
         borderRadius: 8,
         background: theme.modalBackground,
         color: theme.text,

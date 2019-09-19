@@ -40,7 +40,8 @@ const themes = {
             useNextVariants: true,
         },
         buttonBackground: "#141a27",
-        boundaryGrey: "#71808a"
+        boundaryGrey: "#71808a",
+        svgDisabled: "#636363"
         // overrides: {
         //     MuiPickersToolbar: {
         //       toolbar: {

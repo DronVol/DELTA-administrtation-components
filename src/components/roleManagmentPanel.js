@@ -402,7 +402,8 @@ class RoleManagmentPanel extends Component {
                     </div>
                     <div className = { classes.competencesPanel } >
                         <Tabs classes={ {indicator: classes.tabPabelIndicator } }
-                            aria-label = "" value={this.state.currentTab}
+                            aria-label = "" 
+                            value={this.state.currentTab}
                             onChange={this.handleTabClick}
                             TabIndicatorProps={{ children: <div /> }}
                         >
