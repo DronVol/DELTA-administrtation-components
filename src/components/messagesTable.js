@@ -253,7 +253,7 @@ class MessagesTable extends Component {
                                 onClick={() => this.handleClick(row.id)}
                                 />
                             </TableCell>
-                            <TableCell component="th" id={labelId} scope="row" padding="none">
+                            <TableCell component="th" id={labelId} scope="row" padding="none" classes={{root: classes.timeCell}}>
                                 {String(format(row.date, 'yyyy-MM-dd kk:mm:ss'))}
                             </TableCell>
                             <TableCell align="left">{row.title}</TableCell>
@@ -292,8 +292,9 @@ class MessagesTable extends Component {
 
 const style = theme => ({
     paper: {
-        width: '100%',
+        width: '90%',
         marginBottom: theme.spacing(2),
+        margin: "auto"
     },
     mainWindow: {
         padding: 30,
@@ -337,6 +338,9 @@ const style = theme => ({
         position: "absolute",
         right: 50,
         left: 300
+    },
+    timeCell: {
+        width: 150
     },
     '@global':{
         '.MuiTableCell-root' : {
@@ -385,6 +389,10 @@ const style = theme => ({
             }
         },
         ".MuiTypography-root":{
+            fontFamily: "'Roboto Condensed', sans-serif!important",
+            fontWeight: "300"
+        },
+        ".MuiTooltip-tooltip" : {
             fontFamily: "'Roboto Condensed', sans-serif!important",
             fontWeight: "300"
         }
