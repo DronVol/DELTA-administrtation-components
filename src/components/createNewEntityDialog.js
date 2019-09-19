@@ -11,22 +11,19 @@ import withStyles from "@material-ui/core/es/styles/withStyles";
 class CreateNewEntityDialog extends Component {
 
     state = {
-        id: String(Math.random()).substr(2, 6),
         name: "",
-        techName: (this.props.entity === "role") ? "" : "...",
+        SystemName: "",
         error: false
 
     }
 
     handleText = (entity, e) => {
-        const value = (entity === "id" && e.target.value.length === 0) ? String(Math.random()).substr(2, 6) : e.target.value;
-        this.setState({[entity]: value});
+        this.setState({[entity]: e.target.value});
     }
 
     checkData = () => {
-        if ((this.props.entity === "role" && this.state.techName === "") || this.state.name === "") this.setState({error: true});
-        else this.props.acceptCallback({[this.props.entity]: {name: this.state.name, id: this.state.id, ...(this.props.entity === "role") ? {techName: this.state.techName} : {}}});
-        console.log("data checked");
+        if ( this.state.SystemName === "" || this.state.name === "") this.setState({error: true});
+        else this.props.acceptCallback({[this.props.entity]: { name: this.state.name, SystemName: this.state.SystemName }});
     }
 
     render(){
@@ -39,10 +36,10 @@ class CreateNewEntityDialog extends Component {
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
-                <DialogTitle id = "alert-dialog-title">{"Подтверждение публикации новости"}</DialogTitle>
+                <DialogTitle id = "alert-dialog-title">{"Создание новой " + ((this.props.entity === "Role") ? "роли" : "компетенции")}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id = "alert-dialog-description">
-                        { (props.entity === "role") ?
+                        { (props.entity === "Role") ?
                             "Введите название роли, техническое название и, опционально, id" 
                             :
                             "Введите название роли и, опционально, id"
@@ -61,33 +58,18 @@ class CreateNewEntityDialog extends Component {
                         onChange={(e) => this.handleText("name", e)}
                         error = { this.state.error && this.state.name === "" }
                     />
-                    { props.entity === "role" ?
-                        <TextField
-                            id = "outlined-textarea"
-                            label = "Техническое название"
-                            placeholder = ""
-                            className = { classes.textField }
-                            margin = "normal"
-                            variant = "outlined"
-                            fullWidth
-                            classes = {{root: classes.textFieldRoot}}
-                            value = { this.state.techName }
-                            onChange={(e) => this.handleText("techName", e)}
-                            error = { this.state.error && this.state.techName === "" }
-                        />
-                        : null
-                    }
                     <TextField
                         id = "outlined-textarea"
-                        label = "ID"
+                        label = "Техническое название"
                         placeholder = ""
                         className = { classes.textField }
                         margin = "normal"
                         variant = "outlined"
                         fullWidth
                         classes = {{root: classes.textFieldRoot}}
-                        value = { this.state.id }
-                        onChange={(e) => this.handleText("id", e)}
+                        value = { this.state.SystemName }
+                        onChange={(e) => this.handleText("SystemName", e)}
+                        error = { this.state.error && this.state.SystemName === "" }
                     />
                 </DialogContent>
                 <DialogActions>
