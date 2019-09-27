@@ -8,7 +8,7 @@ const themes = {
     dark: {
         palette:{
             primary: { 
-                main: "rgb(38, 48, 71)"
+                main: "#aab0bd"//"rgb(38, 48, 71)"
             },
             secondary: {
                 main: "#aab0bd"
