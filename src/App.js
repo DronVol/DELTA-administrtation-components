@@ -1,21 +1,33 @@
 import React, { Component } from 'react';
 import './App.css';
 import withStyles from "@material-ui/core/es/styles/withStyles";
-import RubberTable from "./components/rubberTable";
+import Pagination from "./components/paginationWithScroll";
+import { disableBodyScroll } from 'body-scroll-lock';
 
 class App extends Component {
+
+  targetElement = null;
+
+  componentDidMount(){
+    this.targetElement = document.querySelector('body');
+    this.showTargetElement();
+  }
+
+  showTargetElement = () => {
+    disableBodyScroll(this.targetElement);
+  };
 
   render (){
     const {classes} = this.props;
     return (
       <div className={classes.App}>
-        <RubberTable />
+        <Pagination />
       </div>
     )
   }
 }
 
-const styles = theme => ({
+const style = theme => ({
   App: {
     backgroundColor: theme.background,
     position: "absolute",
@@ -27,4 +39,4 @@ const styles = theme => ({
   }
 });
 
-export default withStyles(styles)(App);
+export default withStyles(style)(App);

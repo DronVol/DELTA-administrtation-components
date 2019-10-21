@@ -1,10 +1,11 @@
 import React, { Component, PureComponent } from "react";
 import withStyles from "@material-ui/core/es/styles/withStyles";
-import { ArrowLeft, ArrowRight } from "@material-ui/icons";
+import { ArrowLeft, ArrowRight, FirstPage, LastPage } from "@material-ui/icons";
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
+import Mouse from "./mouseTextIcon";
 
 class RubberTableBody extends PureComponent {
     constructor(props) {
@@ -54,41 +55,52 @@ class RubberTableBody extends PureComponent {
         const columnsWidths = bodyColumnsWidths;
         let width = columns.reduce((sum, val) => {return sum + columnsWidths[val];}, 0);
 
-        const a = (<div className = {classes.tableBody}>
-            {rows.filter((row, index) => (index < rowsOnPage)).map((row, rowInd) => {
-                return <div key={"row" + rowInd} className={classes.tableRow} style={{width: width, height: rowsHeights[row]}} >
-                    {columns.map((column, columnInd) => {
-                        const selectedCell = this.state.clickedInput.row === row && this.state.clickedInput.column === column;
-                        return <div 
-                            key = {"column" + columnInd} 
-                            className={classes.tableColumn} 
-                            style={{width: columnsWidths[column], height: rowsHeights[row]}} 
-                        >
-                            <div
-                                className={classes.tableCellValue}
-                                onClick={(e) => {this.handleInputClick(row, column, data[rowInd][column]);}}
-                                //style = {{lineHeight: rowsHeights[row] + "px"}}
-                            >
-                                {data[rowInd][column]}
-                            </div>
-                            <textarea 
-                                ref={(selectedCell) ? this.inputRef : null}
-                                className={classes.tableInputField} 
-                                type="text" 
-                                value={inputText} 
-                                onChange={this.handleInput} 
-                                style={{display: (selectedCell) ? "block" : "none"}} 
-                                onKeyPress={(e) => {console.log(e.key)}}
-                            />
-                        </div>
-                    })}
-                </div>
-            })}
-        </div>);
+        console.log(this.state);
+        console.log(this.props);
 
-        return a;
+        return (
+            <div className = {classes.tableBody}>
+                {
+                    [
+                        ...rows.filter((row, index) => (index < rowsOnPage && index < data.length)).map((row, rowInd, arr) => {
+                            return (
+                                <div key={"row" + rowInd} className={classes.tableRow} style={{width: width, height: rowsHeights[row]}} >
+                                    {
+                                        columns.map((column, columnInd) => {
+                                                const selectedCell = this.state.clickedInput.row === row && this.state.clickedInput.column === column;
+                                                return <div 
+                                                    key = {"column" + columnInd} 
+                                                    className={classes.tableColumn} 
+                                                    style={{width: columnsWidths[column], height: rowsHeights[row]}} 
+                                                >
+                                                    <div
+                                                        className={classes.tableCellValue}
+                                                        onClick={(e) => {this.handleInputClick(row, column, data[rowInd][column]);}}
+                                                        //style = {{lineHeight: rowsHeights[row] + "px"}}
+                                                    >
+                                                        {data[rowInd][column]}
+                                                    </div>
+                                                    <textarea 
+                                                        ref={(selectedCell) ? this.inputRef : null}
+                                                        className={classes.tableInputField} 
+                                                        type="text" 
+                                                        value={inputText} 
+                                                        onChange={this.handleInput} 
+                                                        style={{display: (selectedCell) ? "block" : "none"}} 
+                                                        onKeyPress={(e) => {console.log(e.key)}}
+                                                    />
+                                                </div>
+                                            })
+                                    }
+                                </div>
+                            )
+                        }),
+                        <div key={"lastRow"} style={{width: "100%", height: (rowsOnPage - data.length) * 50}} />
+                    ]
+                }
+            </div>
+        );
     }
-
 }
 
 class RubberTable extends Component {
@@ -133,7 +145,9 @@ class RubberTable extends Component {
             inputText: "",
             clickedInput: {row: null, column: null},
             cursorInputPosition: {start: null, end: null},
-            data: fetchResult.data
+            data: fetchResult.data,
+            totalLength: fetchResult.totalLength,
+            lastPage: Math.trunc(fetchResult.totalLength / rowsOnPage)
         };
     }
 
@@ -31268,9 +31282,23 @@ class RubberTable extends Component {
             "Фактор": "Квартальная премия",
             "Сумма": "1302599,234",
             "end\r": ""
+        }, {
+            "Период": "201902",
+            "Версия": "",
+            "Подразделение": "ПЦП",
+            "Функция": "Бухгалтерия",
+            "Расширенная функция": "Бухгалтерия ПЦП",
+            "Функциональный блок": "Финансы",
+            "Статья": "Квартальная премия",
+            "Фактор": "Отработанное время",
+            "Сумма": "-149903,2251",
+            "end\r": "\r"
         }];
+        console.log(page * rowsOnPage);
+        console.log((page + 1) * rowsOnPage - 1);
         return ({
-            data: fetchResult.filter((value, index) => (index >= page * rowsOnPage && index <= (page + 1) * rowsOnPage - 1))
+            data: fetchResult.filter((value, index) => (index >= page * rowsOnPage && index <= (page + 1) * rowsOnPage - 1)),
+            totalLength: fetchResult.length
         })
     }
 
@@ -31463,18 +31491,21 @@ class RubberTable extends Component {
             if (!this.state.rowsHeights.hasOwnProperty(String(i))) newRowsHeights[String(i)] = 50;
         }
         console.log("rows updated!");
+        console.log(fetchResult.data);
         this.setState({
             rowsOnPage: rowsOnPage, 
             rows: rows,  
             rowsHeights: {...this.state.rowsHeights, ...newRowsHeights}, 
             bodyRowsHeights: {...this.state.rowsHeights, ...newRowsHeights},
             data: fetchResult.data,
-            page: page
+            page: page,
+            totalLength: fetchResult.totalLength,
+            lastPage: Math.trunc(fetchResult.totalLength / rowsOnPage)
         });
     }
 
     changePage = (newPage) => {
-        if(newPage > 0) {
+        if(newPage >= 0 && newPage <= this.state.lastPage) {
             this.updateRows(this.state.rowsOnPage, newPage);
         }
     }
@@ -31484,47 +31515,47 @@ class RubberTable extends Component {
         this.updateRows(rowsOnPage, 0);
     }
 
-    generateBody = (e) => {
-        const { rows, bodyRowsHeights, columns, bodyColumnsWidths, data, inputText } = this.state;
-        const rowsHeights = bodyRowsHeights;
-        const columnsWidths = bodyColumnsWidths;
-        const { classes } = this.props;
-        let width = columns.reduce((sum, val) => {return sum + columnsWidths[val];}, 0);
-        console.log("body generated");
-        return(
-            <>
-                {this.state.rows.filter((row, index) => (index < this.state.rowsOnPage)).map((row, rowInd) => {
-                    return <div key={"row" + rowInd} className={classes.tableRow} style={{width: width, height: rowsHeights[row]}} >
-                        {this.state.columns.map((column, columnInd) => {
-                            const selectedCell = this.state.clickedInput.row === row && this.state.clickedInput.column === column;
-                            return <div 
-                                key = {"column" + columnInd} 
-                                className={classes.tableColumn} 
-                                style={{width: columnsWidths[column], height: rowsHeights[row]}} 
-                            >
-                                <div
-                                    className={classes.tableCellValue}
-                                    onClick={(e) => {this.handleInputClick(row, column, data[rowInd][column]);}}
-                                    //style = {{lineHeight: rowsHeights[row] + "px"}}
-                                >
-                                    {data[rowInd][column]}
-                                </div>
-                                <textarea 
-                                    ref={(selectedCell) ? this.inputRef : null}
-                                    className={classes.tableInputField} 
-                                    type="text" 
-                                    value={inputText} 
-                                    onChange={this.handleInput} 
-                                    style={{display: (selectedCell) ? "block" : "none"}} 
-                                    onKeyPress={(e) => {console.log(e.key)}}
-                                />
-                            </div>
-                        })}
-                    </div>
-                })}
-            </>
-        );
-    }
+    // generateBody = (e) => {
+    //     const { rows, bodyRowsHeights, columns, bodyColumnsWidths, data, inputText } = this.state;
+    //     const rowsHeights = bodyRowsHeights;
+    //     const columnsWidths = bodyColumnsWidths;
+    //     const { classes } = this.props;
+    //     let width = columns.reduce((sum, val) => {return sum + columnsWidths[val];}, 0);
+    //     console.log("body generated");
+    //     return(
+    //         <>
+    //             {this.state.rows.filter((row, index) => (index < this.state.rowsOnPage)).map((row, rowInd) => {
+    //                 return <div key={"row" + rowInd} className={classes.tableRow} style={{width: width, height: rowsHeights[row]}} >
+    //                     {this.state.columns.map((column, columnInd) => {
+    //                         const selectedCell = this.state.clickedInput.row === row && this.state.clickedInput.column === column;
+    //                         return <div 
+    //                             key = {"column" + columnInd} 
+    //                             className={classes.tableColumn} 
+    //                             style={{width: columnsWidths[column], height: rowsHeights[row]}} 
+    //                         >
+    //                             <div
+    //                                 className={classes.tableCellValue}
+    //                                 onClick={(e) => {this.handleInputClick(row, column, data[rowInd][column]);}}
+    //                                 //style = {{lineHeight: rowsHeights[row] + "px"}}
+    //                             >
+    //                                 {data[rowInd][column]}
+    //                             </div>
+    //                             <textarea 
+    //                                 ref={(selectedCell) ? this.inputRef : null}
+    //                                 className={classes.tableInputField} 
+    //                                 type="text" 
+    //                                 value={inputText} 
+    //                                 onChange={this.handleInput} 
+    //                                 style={{display: (selectedCell) ? "block" : "none"}} 
+    //                                 onKeyPress={(e) => {console.log(e.key)}}
+    //                             />
+    //                         </div>
+    //                     })}
+    //                 </div>
+    //             })}
+    //         </>
+    //     );
+    // }
 
     handleInput = (e) => {
         console.log(e);
@@ -31558,13 +31589,14 @@ class RubberTable extends Component {
 
     render() {
         const { classes } = this.props;
-        const { rows, bodyRowsHeights, columns, bodyColumnsWidths, data, rowsOnPage } = this.state;
+        const { rows, bodyRowsHeights, columns, bodyColumnsWidths, data, rowsOnPage, page, totalLength, lastPage } = this.state;
         let width = this.state.columns.reduce((sum, val)=>{return sum + this.state.columnsWidths[val];}, 0);
         width += 50;
         let height = this.state.rows.reduce((sum, val)=>{return sum + this.state.rowsHeights[val];}, 0);
         height += 50;
         return (
             <div>
+                <Mouse shadowFill={"#000000"} fill={"#FFFFFF"} classes={{root: {}}}/>
                 <div id={"table"} className = { classes.table } style={{width: width}} ref={this.tableRef}>
                     <div className = {classes.tableWrapper} style={{width: width, height: height}} ref={this.wrapperRef}>
                         {this.generateHeader()}
@@ -31606,8 +31638,13 @@ class RubberTable extends Component {
                         <FormHelperText classes={{root: classes.tablePageNumberSelectLabel}}>Число строк</FormHelperText>
                     </FormControl>
                     <div className = {classes.buttonBlock}>
-                        <ArrowLeft classes={{root: classes.iconButton}} onClick={() => this.changePage(this.state.page - 1)}/>
-                        <ArrowRight classes={{root: classes.iconButton}} onClick={() => this.changePage(this.state.page + 1)}/>
+                        <div className={classes.currentPageLabel} >
+                            {`Страница ${page + 1} из ${lastPage + 1}`}
+                        </div>
+                        <FirstPage classes={{root: classes.iconButton}} onClick={() => this.changePage(0)}/>
+                        <ArrowLeft classes={{root: classes.iconButton}} onClick={() => this.changePage(page - 1)}/>
+                        <ArrowRight classes={{root: classes.iconButton}} onClick={() => this.changePage(page + 1)}/>
+                        <LastPage classes={{root: classes.iconButton}} onClick={() => this.changePage(lastPage)}/>
                     </div>
                 </div>
             </div>
@@ -31742,14 +31779,15 @@ const style = theme => ({
     },
     buttonBlock: {
         position: 'absolute',
-        width: 60,
+        width: 300,
         top: 0,
         bottom: 0, 
-        right: 10
+        right: 10,
+        display: "flex"
     },
     iconButton: {
         height: "100%",
-        width: "50%",
+        width: 40,
         fill: theme.text
     },
     tableBody:{
@@ -31801,6 +31839,11 @@ const style = theme => ({
         color: theme.text,
         fontFamily: "'Roboto Condensed', sans-serif!important",
         fontWeight: "300"
+    },
+    currentPageLabel: {
+        width: 150,
+        lineHeight: "70px",
+        color: theme.text
     }
 
 
