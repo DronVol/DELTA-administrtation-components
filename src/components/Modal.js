@@ -32,7 +32,7 @@ function Modal(props) {
       <DialogTitle classes={{root: classes.title}}>
         {props.title}
       </DialogTitle>
-      <DialogContent>
+      <DialogContent style={{padding: 0}}>
         <DialogContentText  classes={{root: classes.text}} >
           {props.text}
         </DialogContentText>
@@ -61,6 +61,7 @@ const styles = theme => ({
     borderRadius: 8
   },
   title: {
+    padding: "40px 40px 0 40px",
     "& > h6": {
       color: theme.textColor,
       fontSize: 18,
@@ -74,12 +75,14 @@ const styles = theme => ({
     marginTop: 0,
     fontWeight: 300,
     lineHeight: "19px",
+    padding: 40,
     "& > p": {
       color: theme.textColor,
       fontSize: 16,
       marginTop: 15,
       fontWeight: 300,
       lineHeight: "19px",
+      padding: 0,
     }
   },
   modalBtn: {

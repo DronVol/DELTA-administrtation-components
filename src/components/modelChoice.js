@@ -306,7 +306,7 @@ export default function ModelChoice(props){
                 title={"Перейти к модели"}
                 text={"Вы уверены, что хотите перейти к выбранной модели?"}
             >
-                <div className={`${classes.text} ${classes.declineButton}`}>
+                <div className={`${classes.text} ${classes.declineButton}`} style={{marginRight: 10}}>
                     {"Отмена"}
                 </div>
                 <div className={`${classes.text} ${classes.acceptButton}`}>
