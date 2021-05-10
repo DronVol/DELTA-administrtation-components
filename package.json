@@ -13,7 +13,7 @@
     "body-scroll-lock": "^2.6.4",
     "clsx": "^1.0.4",
     "date-fns": "^2.0.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "react": "^16.9.0",
     "react-anime": "^2.2.0",
     "react-dom": "^16.9.0",
